@@ -1,0 +1,42 @@
+const videoInput = document.getElementById('videoInput');
+const videoElement = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+// Setup the video input for user to upload a video file
+videoInput.addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const videoURL = URL.createObjectURL(file);
+    videoElement.src = videoURL;
+    videoElement.load();
+    videoElement.play();
+  }
+});
+
+// Adjust canvas size to match the video size
+videoElement.addEventListener('play', () => {
+  canvas.width = videoElement.videoWidth;
+  canvas.height = videoElement.videoHeight;
+  detectVehicles();
+});
+
+// Function to detect vehicles
+function detectVehicles() {
+  if (videoElement.paused || videoElement.ended) return;
+
+  // Draw video frame to canvas
+  ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+
+  // Implement the vehicle detection logic here (you can use OpenCV.js or a pre-trained model for vehicle detection)
+
+  // Example: Drawing a fake bounding box (you will replace this with real vehicle detection)
+  ctx.strokeStyle = 'red';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.rect(100, 100, 200, 100); // Fake vehicle bounding box
+  ctx.stroke();
+
+  // Continue the detection every frame
+  requestAnimationFrame(detectVehicles);
+}
